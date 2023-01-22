@@ -12,4 +12,4 @@ def get_processes():
     # Displaying the output
     
     return processes
-print(sys.getsizeof(get_processes))
+# print(sys.getsizeof(get_processes))
