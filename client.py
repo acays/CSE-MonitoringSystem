@@ -1,5 +1,7 @@
 import socket
 import sys
+import multiprocessing
+import multiprocessing.connection as connection
 
 #https://realpython.com/python-sockets/\
 HOST = "127.0.0.1"  # Standard loopback interface address (localhost)

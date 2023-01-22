@@ -19,12 +19,12 @@ def create_server():
                     data = conn.recv(30000)
                     if not data:
                         break
-                    # processes = get_processes()
+                    processes = get_processes()
                     # print("size is ", sys.getsizeof(processes))
                     
                     # print("data is ", data)
                     # conn.sendall(data)
-                    conn.sendall(bytes(get_processes(), 'utf-8'))
+                    conn.sendall(bytes(str(sys.getsizeof(processes)), 'utf-8'))
                     # conn.sendall(get_processes(), 'utf-8')
     
 create_server()
