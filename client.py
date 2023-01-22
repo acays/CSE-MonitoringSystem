@@ -12,12 +12,10 @@ def create_client():
         s.connect((HOST, PORT))
        
         s.sendall(b"Hello, world")
-        data = s.recv(30000)
-        print(f"Received {data!r}")
-       
-        # while(i < 10):
-        #     s.sendall(b"Hello, world")
-        #     data = s.recv(30000)
-        #     print(f"Received {data!r}")
-        #     i = i+1
+        message_size = int(s.recv(1024))
+        processes = s.recv(message_size)
+        print(processes)
+        
+
+        
 create_client()

@@ -16,7 +16,7 @@ def create_server():
                 print(f"Connected by {addr}")
                 
                 while True:
-                    data = conn.recv(30000)
+                    data = conn.recv(1024)
                     if not data:
                         break
                     processes = get_processes()
@@ -25,6 +25,7 @@ def create_server():
                     # print("data is ", data)
                     # conn.sendall(data)
                     conn.sendall(bytes(str(sys.getsizeof(processes)), 'utf-8'))
+                    conn.sendall(bytes(str(processes), 'utf-8'))
                     # conn.sendall(get_processes(), 'utf-8')
     
 create_server()
