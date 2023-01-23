@@ -4,7 +4,7 @@ import selectors
 import types
 #https://realpython.com/python-sockets/\
 sel = selectors.DefaultSelector()
-messages = [b"Message 1 from client.", b"Message 2 from client."]
+messages = [b"Hello world", b"gibberish"]
 
 def start_connections(host, port, num_conns):
     server_addr = (host, port)
@@ -23,3 +23,4 @@ def start_connections(host, port, num_conns):
             outb=b"",
         )
         sel.register(sock, events, data=data)
+start_connections(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]))

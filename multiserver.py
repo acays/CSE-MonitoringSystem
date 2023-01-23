@@ -4,7 +4,7 @@ import socket
 import selectors
 import types
 
-#https://realpython.com/python-sockets/\
+#https://realpython.com/python-sockets/
 def accept_wrapper(sock):
     conn, addr = sock.accept()  # Should be ready to read
     print(f"Accepted connection from {addr}")
