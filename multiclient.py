@@ -1,26 +1,43 @@
-import sys
-import socket
-import selectors
-import types
-#https://realpython.com/python-sockets/\
-sel = selectors.DefaultSelector()
-messages = [b"Hello world", b"gibberish"]
+# https://www.geeksforgeeks.org/socket-programming-multi-threading-python/
 
-def start_connections(host, port, num_conns):
-    server_addr = (host, port)
-    for i in range(0, num_conns):
-        connid = i + 1
-        print(f"Starting connection {connid} to {server_addr}")
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.setblocking(False)
-        sock.connect_ex(server_addr)
-        events = selectors.EVENT_READ | selectors.EVENT_WRITE
-        data = types.SimpleNamespace(
-            connid=connid,
-            msg_total=sum(len(m) for m in messages),
-            recv_total=0,
-            messages=messages.copy(),
-            outb=b"",
-        )
-        sel.register(sock, events, data=data)
-start_connections(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]))
+
+import socket
+ 
+ 
+def Main():
+    # local host IP '127.0.0.1'
+    host = '127.0.0.1'
+ 
+    # Define the port on which you want to connect
+    port = 12345
+ 
+    s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+ 
+    # connect to server on local computer
+    s.connect((host,port))
+ 
+    # message you send to server
+    message = "shaurya says geeksforgeeks"
+    while True:
+ 
+        # message sent to server
+        s.send(message.encode('ascii'))
+ 
+        # message received from server
+        data = s.recv(1024)
+ 
+        # print the received message
+        # here it would be a reverse of sent message
+        print('Received from the server :',str(data.decode('ascii')))
+ 
+        # ask the client whether he wants to continue
+        ans = input('\nDo you want to continue(y/n) :')
+        if ans == 'y':
+            continue
+        else:
+            break
+    # close the connection
+    s.close()
+ 
+if __name__ == '__main__':
+    Main()
