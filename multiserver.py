@@ -8,30 +8,30 @@ import socket
 # import thread module
 from _thread import *
 import threading
+from Stage1 import *
  
 print_lock = threading.Lock()
  
 
-def client_service(c):
+def client_service(conn):
     while True:
  
         # data received from client
-        data = c.recv(1024)
+        data = conn.recv(1024)
         if not data:
             print('Bye')
              
             # lock released on exit
             print_lock.release()
             break
- 
-        # reverse the given string from client
-        data = data[::-1]
- 
+
+        processes = get_processes()
         # send back reversed string to client
-        c.send(data)
+        conn.sendall(bytes(str(sys.getsizeof(processes)), 'utf-8'))
+        conn.sendall(bytes(str(processes), 'utf-8'))
  
     # connection closed
-    c.close()
+    conn.close()
  
  
 def Main():

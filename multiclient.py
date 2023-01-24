@@ -17,19 +17,17 @@ def Main():
     s.connect((host,port))
  
     # message you send to server
-    message = "shaurya says geeksforgeeks"
+    message = "send me the processes running on your machine"
     while True:
  
         # message sent to server
         s.send(message.encode('ascii'))
  
         # message received from server
-        data = s.recv(1024)
- 
-        # print the received message
-        # here it would be a reverse of sent message
-        print('Received from the server :',str(data.decode('ascii')))
- 
+        message_size = int(s.recv(1024))
+        processes = s.recv(message_size)
+        print(processes)
+
         # ask the client whether he wants to continue
         ans = input('\nDo you want to continue(y/n) :')
         if ans == 'y':
