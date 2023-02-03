@@ -1,31 +1,86 @@
+
+# https://www.geeksforgeeks.org/socket-programming-multi-threading-python/
+
+
+# import socket programming library
 import socket
-import sys
-from Stage1 import *
-#https://realpython.com/python-sockets/
+ 
+# import thread module
+from _thread import *
+import threading
+from process_list import *
+ 
+print_lock = threading.Lock()
+ 
+
+def client_service(conn, isStage3):
+    while True:
+ 
+        # data received from client
+        data = conn.recv(1024)
+        if not data:
+            print('Bye')
+             
+            # lock released on exit
+            print_lock.release()
+            break
+
+        send_processes(conn)
+        
+        # if isStage3 :
+        #     send_file(conn)
+ 
+    # connection closed
+    conn.close()
+def send_processes(conn) :
+    processes = get_processes()
     
-HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
-PORT = 8080  # Port to listen on (non-privileged ports are > 1023)
-def create_server():
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind((HOST, PORT))
+    conn.sendall(bytes(str(sys.getsizeof(processes)), 'utf-8'))
+    conn.sendall(bytes(str(processes), 'utf-8'))
     
-        while True:
-            s.listen()
-            conn, addr = s.accept()    
-            with conn:
-                print(f"Connected by {addr}")
-                
-                while True:
-                    data = conn.recv(1024)
-                    if not data:
-                        break
-                    processes = get_processes()
-                    # print("size is ", sys.getsizeof(processes))
-                    
-                    # print("data is ", data)
-                    # conn.sendall(data)
-                    conn.sendall(bytes(str(sys.getsizeof(processes)), 'utf-8'))
-                    conn.sendall(bytes(str(processes), 'utf-8'))
-                    # conn.sendall(get_processes(), 'utf-8')
+def send_file(conn) :
+    # Read File in binary
+    file = open('test/test.txt', 'rb')
+    line = file.read(1024)
     
-create_server()
+    # Keep sending data to the client
+    while(line):
+        conn.send(line)
+        line = file.read(1024)
+    
+    file.close()
+    print('File has been transferred successfully.')
+
+ 
+def server():
+    host = ""
+ 
+    # reserve a port on your computer
+    # in our case it is 12345 but it
+    # can be anything
+    port = 12345
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind((host, port))
+    print("socket binded to port", port)
+ 
+    # put the socket into listening mode
+    server.listen(5)
+    print("socket is listening")
+
+    # a forever loop until client wants to exit
+    while True:
+
+        # establish connection with client
+        conn, addr = server.accept()
+
+        # lock acquired by client
+        print_lock.acquire()
+        print('Connected to :', addr[0], ':', addr[1])
+
+        # Start a new thread and return its identifier
+        start_new_thread(client_service, (conn, False))
+    server.close()
+
+ 
+
+server()
