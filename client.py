@@ -25,6 +25,8 @@ def client(isStage3):
             print("in stage 3")
             server = create_server(host, port)
             send_message(server, str(isStage3))
+            
+            print(receive_processes(server))
             server.close()
             
         
@@ -41,6 +43,8 @@ def create_server(host, port) :
 
 def send_message(server, message) :  # message you send to server
     server.send(message.encode('ascii'))
+    
+
     
     
 def receive_file(server) : 

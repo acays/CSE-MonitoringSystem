@@ -9,7 +9,9 @@ import socket
 from _thread import *
 import threading
 from process_list import *
- 
+import os
+from pathlib import Path
+
 print_lock = threading.Lock()
  
 
@@ -25,13 +27,19 @@ def client_service(conn, isStage3):
             print_lock.release()
             break
 
-        
-        print("stage 3 is ", eval(isStage3))
+    
         if eval(isStage3) :
-            # send_file(conn)
-            print("executing stage 3!")
+           
+            send_processes(conn)
+            cur_dir = Path(Path.cwd())
+            file_dir = Path.joinpath(cur_dir, "test")
+            file_path = Path.joinpath(file_dir, "test.txt")
+            
+            print("file being sent is:", file_path)
+             # send_file(conn)
         else :
             send_processes(conn)
+            
     # connection closed
     conn.close()
 def send_processes(conn) :
