@@ -17,19 +17,21 @@ def client_service(conn, isStage3):
     while True:
  
         # data received from client
-        data = conn.recv(1024)
-        if not data:
+        isStage3 = conn.recv(1024)
+        if not isStage3:
             print('Bye')
              
             # lock released on exit
             print_lock.release()
             break
 
-        send_processes(conn)
         
-        # if isStage3 :
-        #     send_file(conn)
- 
+        print("stage 3 is ", isStage3)
+        if isStage3 == "True" :
+            # send_file(conn)
+            print("executing stage 3!")
+        else :
+            send_processes(conn)
     # connection closed
     conn.close()
 def send_processes(conn) :
@@ -41,11 +43,13 @@ def send_processes(conn) :
 def send_file(conn) :
     # Read File in binary
     file = open('test/test.txt', 'rb')
+    # file = open(os.path.join('/test', "test.txt"))
     line = file.read(1024)
     
     # Keep sending data to the client
     while(line):
         conn.send(line)
+        print("sent line:", line)
         line = file.read(1024)
     
     file.close()

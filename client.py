@@ -14,21 +14,15 @@ def client(isStage3):
         # local host IP '127.0.0.1'
         host = '127.0.0.1'
         
-        
-    
-    
         while True and isStage3 == False:
             
             
             time.sleep(2)
-            server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-            # connect to server on local computer
-            server.connect((host,port))
-        
+            server = create_server(host, port)
+            send_message(server, str(isStage3))
+            
            
-            # message you send to server
-            message = "send me the processes running on your machine"
-            print(receive_processes(server, message))
+            print(receive_processes(server))
         
             
             
@@ -40,6 +34,18 @@ def client(isStage3):
     except KeyboardInterrupt:
         server.close()
         pass
+    
+def create_server(host, port) :
+    server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    # connect to server on local computer
+    server.connect((host,port))
+    
+    return server
+
+def send_message(server, message) :  # message you send to server
+    server.send(message.encode('ascii'))
+    
+    
 def receive_file(server) : 
     # Write File in binary
     file = open('client-file.txt', 'wb')
@@ -53,10 +59,8 @@ def receive_file(server) :
 
     print('File has been received successfully.')
          
-def receive_processes(server, message) :
-     # message sent to server
-    server.send(message.encode('ascii'))
-
+def receive_processes(server) :
+    
     # message received from server
     message_size = int(server.recv(1024))
     processes = server.recv(message_size)
