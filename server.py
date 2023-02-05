@@ -26,8 +26,8 @@ def client_service(conn, isStage3):
             break
 
         
-        print("stage 3 is ", isStage3)
-        if isStage3 == "True" :
+        print("stage 3 is ", eval(isStage3))
+        if eval(isStage3) :
             # send_file(conn)
             print("executing stage 3!")
         else :

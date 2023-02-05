@@ -15,21 +15,18 @@ def client(isStage3):
         host = '127.0.0.1'
         
         while True and isStage3 == False:
-            
-            
             time.sleep(2)
             server = create_server(host, port)
             send_message(server, str(isStage3))
             
-           
             print(receive_processes(server))
-        
-            
-            
-            # close the connection
-            # s.close()
+                
         if isStage3 :
             print("in stage 3")
+            server = create_server(host, port)
+            send_message(server, str(isStage3))
+            server.close()
+            
         
     except KeyboardInterrupt:
         server.close()
@@ -60,11 +57,9 @@ def receive_file(server) :
     print('File has been received successfully.')
          
 def receive_processes(server) :
-    
-    # message received from server
     message_size = int(server.recv(1024))
     processes = server.recv(message_size)
     
     return processes
  
-client(False)
+client(True)
