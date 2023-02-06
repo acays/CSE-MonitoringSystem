@@ -36,7 +36,7 @@ def client_service(conn, isStage3):
             file_path = Path.joinpath(file_dir, "test.txt")
             
             print("file being sent is:", file_path)
-             # send_file(conn)
+            send_file(conn)
         else :
             send_processes(conn)
             
@@ -57,19 +57,35 @@ def send_processes(conn) :
     
 def send_file(conn) :
     # Read File in binary
-    file = open('test/test.txt', 'rb')
-    # file = open(os.path.join('/test', "test.txt"))
-    line = file.read(1024)
     
-    # Keep sending data to the client
-    while(line):
-        conn.send(line)
-        print("sent line:", line)
-        line = file.read(1024)
+    lines = read_lines('test/test.txt')
     
-    file.close()
-    print('File has been transferred successfully.')
+    print("lines is:", lines)
+    
+    # # file = open(os.path.join('/test', "test.txt"))
+    # line = str(file.read(1024))
+    
+    # # Keep sending data to the client
+    # while(line):
+    #     conn.send(bytes(line, 'utf-8'))
+    #     print("sent line:", line)
+    #     line = str(file.read(1024))
+    
+    # file.close()
+    # print('File has been transferred successfully.')
 
+def read_lines(path) :
+    file = open(path, 'rb')
+    
+    lines = file.readlines()
+    
+    count = 0
+    # Strips the newline character
+    for line in lines:
+        count += 1
+        print("Line{}: {}".format(count, line.strip()))
+        
+    return lines
  
 def server():
     host = ""

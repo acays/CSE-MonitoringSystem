@@ -22,11 +22,12 @@ def client(isStage3):
             print(receive_processes(server))
                 
         if isStage3 :
-            print("in stage 3")
             server = create_server(host, port)
             send_message(server, str(isStage3))
             
             print(receive_directories(server))
+            # receive_file(server)
+            
             server.close()
             
         
