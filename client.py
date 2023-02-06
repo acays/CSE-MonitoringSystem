@@ -26,7 +26,7 @@ def client(isStage3):
             send_message(server, str(isStage3))
             
             print(receive_directories(server))
-            # receive_file(server)
+            receive_file(server)
             
             server.close()
             
@@ -57,12 +57,21 @@ def receive_file(server) :
     # Write File in binary
     file = open('client-file.txt', 'wb')
 
-    # Keep receiving data from the server
-    line = server.recv(1024)
-
-    while(line):
-        file.write(line)
+    num_lines = int(server.recv(1024))
+    # line = server.recv(1024)
+    line = "default"
+        
+    # https://stackoverflow.com/questions/33054527/typeerror-a-bytes-like-object-is-required-not-str-when-handling-file-conte
+    for i in range(num_lines):
         line = server.recv(1024)
+        # print("before")
+        line = line[2:len(line)-1]
+        line = str(line) + '\n'
+        line = bytes(line, 'utf-8')
+        file.write(line[2:len(line)])
+        # print("after")
+        # line = server.recv(1024)
+        
 
     print('File has been received successfully.')
          

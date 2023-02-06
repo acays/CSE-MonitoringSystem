@@ -59,20 +59,21 @@ def send_file(conn) :
     # Read File in binary
     
     lines = read_lines('test/test.txt')
+    conn.sendall(bytes(str(len(lines)), 'utf-8'))
     
-    print("lines is:", lines)
+    print("lines length is:", len(lines))
     
     # # file = open(os.path.join('/test', "test.txt"))
     # line = str(file.read(1024))
     
     # # Keep sending data to the client
-    # while(line):
-    #     conn.send(bytes(line, 'utf-8'))
-    #     print("sent line:", line)
-    #     line = str(file.read(1024))
+      
+    for line in lines:
+        conn.send(bytes(str(line), 'utf-8'))
+        print("sent line:", line)
     
-    # file.close()
-    # print('File has been transferred successfully.')
+    
+    print('File has been transferred successfully.')
 
 def read_lines(path) :
     file = open(path, 'rb')
@@ -84,6 +85,8 @@ def read_lines(path) :
     for line in lines:
         count += 1
         print("Line{}: {}".format(count, line.strip()))
+        
+    file.close()
         
     return lines
  
