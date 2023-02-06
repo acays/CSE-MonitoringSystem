@@ -4,7 +4,7 @@
 
 # import socket programming library
 import socket
- 
+import subprocess
 # import thread module
 from _thread import *
 import threading
@@ -30,7 +30,7 @@ def client_service(conn, isStage3):
     
         if eval(isStage3) :
            
-            send_processes(conn)
+            send_directories(conn)
             cur_dir = Path(Path.cwd())
             file_dir = Path.joinpath(cur_dir, "test")
             file_path = Path.joinpath(file_dir, "test.txt")
@@ -42,6 +42,13 @@ def client_service(conn, isStage3):
             
     # connection closed
     conn.close()
+    
+def send_directories(conn) :
+    directories = str(subprocess.check_output("dir", shell=True))
+    print("dir is  ", directories)
+    conn.sendall(bytes(str(sys.getsizeof(directories)), 'utf-8'))
+    conn.sendall(bytes(str(directories), 'utf-8'))
+    
 def send_processes(conn) :
     processes = get_processes()
     

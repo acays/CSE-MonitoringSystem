@@ -26,14 +26,19 @@ def client(isStage3):
             server = create_server(host, port)
             send_message(server, str(isStage3))
             
-            print(receive_processes(server))
+            print(receive_directories(server))
             server.close()
             
         
     except KeyboardInterrupt:
         server.close()
         pass
+def receive_directories(server) :
+    message_size = int(server.recv(1024))
+    directories = server.recv(message_size)
     
+    return directories
+   
 def create_server(host, port) :
     server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     # connect to server on local computer
@@ -41,7 +46,7 @@ def create_server(host, port) :
     
     return server
 
-def send_message(server, message) :  # message you send to server
+def send_message(server, message) :  # message you send to servers
     server.send(message.encode('ascii'))
     
 
