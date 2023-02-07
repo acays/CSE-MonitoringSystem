@@ -37,6 +37,7 @@ def client_service(conn, isStage3):
             
             print("file being sent is:", file_path)
             send_file(conn)
+            # send_file2(conn)
         else :
             send_processes(conn)
             
@@ -59,18 +60,15 @@ def send_file(conn) :
     # Read File in binary
     
     lines = read_lines('test/test.txt')
-    conn.sendall(bytes(str(len(lines)), 'utf-8'))
+    conn.send(bytes(str(len(lines)), 'utf-8'))
     
     print("lines length is:", len(lines))
-    
-    # # file = open(os.path.join('/test', "test.txt"))
-    # line = str(file.read(1024))
-    
-    # # Keep sending data to the client
       
     for line in lines:
-        conn.send(bytes(str(line), 'utf-8'))
-        print("sent line:", line)
+        client_go_ahead = conn.recv(1024)
+        if client_go_ahead :
+            conn.send(bytes(str(line), 'utf-8'))
+            print("sent line:", line)
     
     
     print('File has been transferred successfully.')

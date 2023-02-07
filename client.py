@@ -26,7 +26,7 @@ def client(isStage3):
             send_message(server, str(isStage3))
             
             print(receive_directories(server))
-            receive_file(server)
+            receive_file2(server)
             
             server.close()
             
@@ -50,9 +50,19 @@ def create_server(host, port) :
 def send_message(server, message) :  # message you send to servers
     server.send(message.encode('ascii'))
     
+def receive_file3(server) :
+    # Write File in binary
+    file = open('client-file.txt', 'wb')
 
-    
-    
+    # Keep receiving data from the server
+    line = server.recv(1024)
+
+    while(line):
+        file.write(line)
+        print("line is:", line)
+        line = server.recv(1024)
+    print('File has been transferred successfully.')    
+        
 def receive_file(server) : 
     # Write File in binary
     file = open('client-file.txt', 'wb')
@@ -60,18 +70,46 @@ def receive_file(server) :
     num_lines = int(server.recv(1024))
     # line = server.recv(1024)
     line = "default"
+    
+    print("")
         
+    for i in range(num_lines)-1:
+        line = server.recv(1024)
+        print("1",line.decode())
+        line = line[2:len(line)-1]
+        print("2",line)
+        line = str(line) + '\n'
+        print("3",line)
+        line = bytes(line, 'utf-8')
+        print("4",line)
+        file.write(line[2:len(line)])
+        
+        
+def receive_file2(server) : 
+    # Write File in binary
+    file = open('client-file.txt', 'w')
+
+    num_lines = int(server.recv(1024))
+    # line = server.recv(1024)
+    line = "default"
+    print()
+    print("lines sent is", num_lines)
+    send_message(server, "ready for next line") 
     # https://stackoverflow.com/questions/33054527/typeerror-a-bytes-like-object-is-required-not-str-when-handling-file-conte
     for i in range(num_lines):
         line = server.recv(1024)
-        # print("before")
-        line = line[2:len(line)-1]
+         
+        line = str(line)
+        print("line is:", line)
+        line = line[4:len(line)-2]
+        print("line is:", line)
         line = str(line) + '\n'
-        line = bytes(line, 'utf-8')
-        file.write(line[2:len(line)])
-        # print("after")
-        # line = server.recv(1024)
         
+        print()
+        file.write(line)
+
+        if i < num_lines-1 :
+            send_message(server, "ready for next line")        
 
     print('File has been received successfully.')
          
