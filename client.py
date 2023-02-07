@@ -49,19 +49,7 @@ def create_server(host, port) :
 
 def send_message(server, message) :  # message you send to servers
     server.send(message.encode('ascii'))
-    
-def receive_file3(server) :
-    # Write File in binary
-    file = open('client-file.txt', 'wb')
 
-    # Keep receiving data from the server
-    line = server.recv(1024)
-
-    while(line):
-        file.write(line)
-        print("line is:", line)
-        line = server.recv(1024)
-    print('File has been transferred successfully.')    
         
 def receive_file(server) : 
     # Write File in binary
@@ -99,20 +87,25 @@ def receive_file2(server) :
     for i in range(num_lines):
         line = server.recv(1024)
          
-        line = str(line)
-        print("line is:", line)
-        line = line[4:len(line)-2]
-        print("line is:", line)
-        line = str(line) + '\n'
-        
+        line = process_line(line, i, num_lines)
         print()
-        file.write(line)
+        file.write(line + "\n")
 
         if i < num_lines-1 :
             send_message(server, "ready for next line")        
 
     print('File has been received successfully.')
-         
+def process_line(line, i, num_lines) :
+    line = str(line)
+    print("line is:", line)
+    if i == num_lines-1 :
+        line = line[4:len(line)-2]
+    else :
+         line = line[4:len(line)-8]
+    print("line is:", line)
+    # line = str(line) + '\n'
+    return line
+                
 def receive_processes(server) :
     message_size = int(server.recv(1024))
     processes = server.recv(message_size)
