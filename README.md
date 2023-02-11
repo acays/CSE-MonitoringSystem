@@ -2,7 +2,7 @@ Run Instructions
 
 prereqs: python3, windows os
 
-Please run on a windows os
+Please run on a windows os using the command prompt
 
 Stage 1
 
@@ -15,8 +15,6 @@ log to file (optional)
 python3 stage1.py -f file_name.txt
 
 Stage 2
-
-
 
 python3 stage2.py 
 
@@ -33,6 +31,8 @@ Options:
 
 Will use localhost and a default port number of 12345 if not set
 
+After entering the stage2 command the current terminal will become the server and a new terminal that automatically opens will be the client
+
 TODO
 
 stage 1
@@ -43,16 +43,12 @@ stage 2
 
 -user defined timing
 
--add argument for log to file (same as stage 1)
-
--make stage 2 file that will auto open a terminal for the client and server
-
 -add linux functionality
 
 stage 3
 
 -configure directories
 
--send file to
+-can pass in target path
 
 -add linux functionality
