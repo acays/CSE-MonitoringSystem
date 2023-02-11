@@ -25,11 +25,10 @@ while i < len(sys.argv) :
         port_client = sys.argv[i+1]
     
     i = i + 2
+
+if __name__ == "__main__":
+   
+    server(host_server, port_server, None)
+    # subprocess.call('start /wait python bb.py', shell=True)
     
-
-print("inputs are", file_name, host_server, port_server)
-
-
-server(host_server, port_server)
-
 

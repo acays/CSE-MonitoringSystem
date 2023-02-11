@@ -2,31 +2,36 @@
 import socket
 import time
  
-def client(isStage3):
+def client(isStage3, host, port, file_name):
     
     try: 
-        port = 12345
-        host = '127.0.0.1'
-        
+    
+        # in stage 2
         while True and isStage3 == False:
             time.sleep(60)
-            server = create_server(host, port)
-            send_message(server, str(isStage3))
+            server_conn = create_server_conn(host, port)
+            send_message(server_conn, str(isStage3))
+            processes = receive_processes(server_conn)
             
-            print(receive_processes(server))
+            if file_name == None :
+                print(processes)
+            else :
+                process_file = open(file_name, "w")
+    
+                process_file.write(processes() + "\n")
                 
         if isStage3 :
-            server = create_server(host, port)
-            send_message(server, str(isStage3))
+            server_conn = create_server_conn(host, port)
+            send_message(server_conn, str(isStage3))
             
-            print(receive_directories(server))
-            receive_file(server)
+            print(receive_directories(server_conn))
+            receive_file(server_conn)
             
-            server.close()
+            server_conn.close()
             
         
     except KeyboardInterrupt:
-        server.close()
+        server_conn.close()
         pass
 def receive_directories(server) :
     message_size = int(server.recv(1024))
@@ -34,16 +39,21 @@ def receive_directories(server) :
     
     return directories
    
-def create_server(host, port) :
-    server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+def create_server_conn(host, port) :
+    server_conn = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     # connect to server on local computer
-    server.connect((host,port))
+    server_conn.connect((host,port))
     
-    return server
+    return server_conn
 
-def send_message(server, message) :  # message you send to servers
-    server.send(message.encode('ascii'))
-
+def send_message(server_conn, message) :  # message you send to servers
+    server_conn.send(message.encode('ascii'))
+    
+def receive_processes(server) :
+    message_size = int(server.recv(1024))
+    processes = server.recv(message_size)
+    
+    return processes
         
 def receive_file(server) : 
     file = open('client-file.txt', 'w')
@@ -78,10 +88,7 @@ def process_line(line, i, num_lines) :
     # line = str(line) + '\n'
     return line
                 
-def receive_processes(server) :
-    message_size = int(server.recv(1024))
-    processes = server.recv(message_size)
-    
-    return processes
+
+
 if __name__ == "__main__":
-    client(False)
+    client(False, '127.0.0.1', 12345, None)

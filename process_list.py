@@ -8,7 +8,7 @@ def get_processes():
         
     return processes
 
-def save_processes_tofile(name):
-    process_file = open(name, "w")
+def save_processes_tofile(file_name):
+    process_file = open(file_name, "w")
     
     process_file.write(get_processes() + "\n")

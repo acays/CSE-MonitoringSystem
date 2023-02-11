@@ -43,8 +43,6 @@ stage 2
 
 -user defined timing
 
--add arguments that define the host and port
-
 -add argument for log to file (same as stage 1)
 
 -make stage 2 file that will auto open a terminal for the client and server
