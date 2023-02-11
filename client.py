@@ -14,12 +14,12 @@ def client(isStage3, host, port, file_name):
             send_message(server_conn, str(isStage3))
             processes = receive_processes(server_conn)
             
-            if file_name == None :
+            if file_name ==  "None" :
                 print(processes)
             else :
                 process_file = open(file_name, "w")
     
-                process_file.write(processes() + "\n")
+                process_file.write(str(processes))
                 
         if isStage3 :
             server_conn = create_server_conn(host, port)
@@ -34,6 +34,7 @@ def client(isStage3, host, port, file_name):
     except KeyboardInterrupt:
         server_conn.close()
         pass
+    
 def receive_directories(server) :
     message_size = int(server.recv(1024))
     directories = server.recv(message_size)
@@ -42,7 +43,6 @@ def receive_directories(server) :
    
 def create_server_conn(host, port) :
     server_conn = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    # connect to server on local computer
     server_conn.connect((host,port))
     
     return server_conn
@@ -57,7 +57,7 @@ def receive_processes(server) :
     return processes
         
 def receive_file(server) : 
-    file = open('client-file.txt', 'w')
+    file = open('processess.txt', 'w')
 
     num_lines = int(server.recv(1024))
     # line = server.recv(1024)
@@ -89,10 +89,10 @@ def process_line(line, i, num_lines) :
 
 
 if __name__ == "__main__":
-    file_name = sys.argv[3]
-    if sys.argv[3] == "None":
-        file_name = None
+    # file_name = sys.argv[3]
+    # if sys.argv[3] == "None":
+    #     file_name = None
     
     
-    client(eval(sys.argv[4]), sys.argv[1], int(sys.argv[2]), file_name)
+    client(eval(sys.argv[4]), sys.argv[1], int(sys.argv[2]), sys.argv[3])
     

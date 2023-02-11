@@ -33,13 +33,19 @@ def client_service(conn, isStage3, file_name):
         if eval(isStage3) :
            
             send_directories(conn)
-            cur_dir = Path(Path.cwd())
-            file_dir = Path.joinpath(cur_dir, "test")
-            file_path = Path.joinpath(file_dir, "test.txt")
             
+            # checking to see if the full path is already given
+            if file_name[0:3] == "C:'\'" :
+                file_path = file_name
+            # otherwise assume path starts from current directory
+            else :      
+                cur_dir = Path(Path.cwd())
+                # file_dir = Path.joinpath(cur_dir, "test")
+                # file_path = Path.joinpath(cur_dir, "test.txt")
+                file_path = Path.joinpath(cur_dir, "\\" + file_name)
+                
             print("file being sent is:", file_path)
-            send_file(conn)
-            # send_file2(conn)
+            send_file(conn, file_name)
         else :
             send_processes(conn)
        
@@ -59,7 +65,7 @@ def send_processes(conn) :
     conn.sendall(bytes(str(sys.getsizeof(processes)), 'utf-8'))
     conn.sendall(bytes(str(processes), 'utf-8'))
     
-def send_file(conn) :
+def send_file(conn, file_name) :
     lines = read_lines('test/gistfile1.txt')
     conn.send(bytes(str(len(lines)), 'utf-8'))
 
