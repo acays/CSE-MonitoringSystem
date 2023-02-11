@@ -44,7 +44,7 @@ Options:
 
 -of file_name.txt - Saves the target file to file_name.txt on the client machine
 
-    -if not specified file will be named server_file.txt
+    -if not specified the file will be named server_file.txt
 
 -hs hostIP - Sets the server IP 
 
@@ -59,4 +59,4 @@ After entering the stage 3 command the current terminal will become the server a
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
-Alternatively you can run the client directly with the python3 client.py hostIP clientIP file_name(set to None if no file is to be outputted) True(if you want to execute stage 3) or False (if you want to execute stage 2) 
+Alternatively you can run the client directly with python3 client.py hostIP clientIP file_name(set to None if no file is to be outputted) True(if you want to execute stage 3) or False (if you want to execute stage 2) 
