@@ -23,12 +23,12 @@ Options:
 -f file_name.txt - Saves the process output to file_name.txt on the client machine
 
 -hs hostIP - Sets the server IP 
--hc hostIP - Sets the client IP 
+-hc clientIP - Sets the client IP 
 
 -ps port - Sets server port
 -pc port - Sets client port
 
-Will use localhost and a default port number of 12345 if not set
+Will use localhost and a default port number of 12345 or 8080 if not set
 
 After entering the stage 2 command the current terminal will become the server and a new terminal that automatically opens will be the client
 
@@ -48,7 +48,7 @@ Options:
 
 -hs hostIP - Sets the server IP 
 
--hc hostIP - Sets the client IP 
+-hc clientIP - Sets the client IP 
 
 -ps port - Sets server port
 -pc port - Sets client port
@@ -57,22 +57,6 @@ Will use localhost and a default port number of 12345 if not set
 
 After entering the stage 3 command the current terminal will become the server and a new terminal that automatically opens will be the client
 
+-----------------------------------------------------------------------------------------------------------------------------------------------
 
-
-TODO
-
-stage 1
-
--add linux functionality
-
-stage 2
-
--user defined timing
-
--add linux functionality
-
-stage 3
-
--configure directories
-
--add linux functionality
+Alternatively you can run the client directly with the python3 client.py hostIP clientIP file_name(set to None if no file is to be outputted) True(if you want to execute stage 3) or False (if you want to execute stage 2) 
