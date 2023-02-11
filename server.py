@@ -9,7 +9,6 @@ import subprocess
 from _thread import *
 import threading
 from process_list import *
-import os
 from pathlib import Path
 
 import sys
@@ -55,7 +54,6 @@ def client_service(conn, isStage3, file_name):
     
 def send_directories(conn) :
     directories = str(subprocess.check_output("dir", shell=True))
-    print("dir is  ", directories)
     conn.sendall(bytes(str(sys.getsizeof(directories)), 'utf-8'))
     conn.sendall(bytes(str(directories), 'utf-8'))
     
@@ -66,7 +64,7 @@ def send_processes(conn) :
     conn.sendall(bytes(str(processes), 'utf-8'))
     
 def send_file(conn, file_name) :
-    lines = read_lines('test/gistfile1.txt')
+    lines = read_lines(file_name)
     conn.send(bytes(str(len(lines)), 'utf-8'))
 
     for line in lines:

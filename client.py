@@ -26,7 +26,7 @@ def client(isStage3, host, port, file_name):
             send_message(server_conn, str(isStage3))
             
             print(receive_directories(server_conn))
-            receive_file(server_conn)
+            receive_file(server_conn, file_name)
             
             server_conn.close()
             
@@ -56,8 +56,8 @@ def receive_processes(server) :
     
     return processes
         
-def receive_file(server) : 
-    file = open('processess.txt', 'w')
+def receive_file(server, file_name) : 
+    file = open(file_name, 'w')
 
     num_lines = int(server.recv(1024))
     # line = server.recv(1024)
@@ -89,10 +89,9 @@ def process_line(line, i, num_lines) :
 
 
 if __name__ == "__main__":
-    # file_name = sys.argv[3]
-    # if sys.argv[3] == "None":
-    #     file_name = None
+    # call from one of the stages
+    if len(sys.argv) == 5:
+        client(eval(sys.argv[4]), sys.argv[1], int(sys.argv[2]), sys.argv[3])
     
     
-    client(eval(sys.argv[4]), sys.argv[1], int(sys.argv[2]), sys.argv[3])
     

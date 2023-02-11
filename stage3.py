@@ -12,13 +12,13 @@ host_client = '127.0.0.1'
 port_client = 12345
 
 file_name = "server_file.txt"
-target_file = "test/test.txt"
+target_file = "test.txt"
 
 i = 1
 
 
 while i < len(sys.argv) :
-    if sys.argv[i] == "-f" :
+    if sys.argv[i] == "-of" :
         file_name = sys.argv[i+1]
     elif sys.argv[i] == "-hs" :
         host_server = sys.argv[i+1]
@@ -33,10 +33,10 @@ while i < len(sys.argv) :
     
     i = i + 2
  
-def create_client(host, port) :
+def create_client(host, port, file_name) :
     command =  'start /wait python3 client.py ' + str(host) + " " + str(port) + " " + file_name + " " + "True"
     subprocess.call(command, shell=True)   
 if __name__ == "__main__":
-    new_client = Thread(target=create_client, args=(host_client, port_client))
+    new_client = Thread(target=create_client, args=(host_client, port_client, file_name))
     new_client.start()
     server(host_server, port_server, target_file)

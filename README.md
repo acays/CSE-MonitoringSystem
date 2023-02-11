@@ -42,7 +42,7 @@ Options:
 
     -note if entering a relative path there is no need to put a \ as the first character
 
--f file_name.txt - Saves the target file to file_name.txt on the client machine
+-of file_name.txt - Saves the target file to file_name.txt on the client machine
 
 -hs hostIP - Sets the server IP 
 
