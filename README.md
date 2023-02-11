@@ -44,6 +44,8 @@ Options:
 
 -of file_name.txt - Saves the target file to file_name.txt on the client machine
 
+    -if not specified file will be named server_file.txt
+
 -hs hostIP - Sets the server IP 
 
 -hc hostIP - Sets the client IP 
@@ -72,7 +74,5 @@ stage 2
 stage 3
 
 -configure directories
-
--can pass in target path
 
 -add linux functionality

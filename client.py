@@ -89,9 +89,12 @@ def process_line(line, i, num_lines) :
 
 
 if __name__ == "__main__":
-    # call from one of the stages
+    # call from one of the stages or client is run directly with 5 args
     if len(sys.argv) == 5:
         client(eval(sys.argv[4]), sys.argv[1], int(sys.argv[2]), sys.argv[3])
+    # run the client normally  
+    else :
+        client(False, '127.0.0.1', 12345, "None")
     
     
     
