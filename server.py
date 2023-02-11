@@ -16,7 +16,7 @@ import sys
 print_lock = threading.Lock()
  
 
-def client_service(conn, isStage3, file_name):
+def client_service(conn, file_name):
     while True:
  
         # data received from client
@@ -39,8 +39,6 @@ def client_service(conn, isStage3, file_name):
             # otherwise assume path starts from current directory
             else :      
                 cur_dir = Path(Path.cwd())
-                # file_dir = Path.joinpath(cur_dir, "test")
-                # file_path = Path.joinpath(cur_dir, "test.txt")
                 file_path = Path.joinpath(cur_dir, "\\" + file_name)
                 
             print("file being sent is:", file_path)
@@ -48,8 +46,6 @@ def client_service(conn, isStage3, file_name):
         else :
             send_processes(conn)
        
-            
-    # connection closed
     conn.close()
     
 def send_directories(conn) :
@@ -71,7 +67,6 @@ def send_file(conn, file_name) :
         client_go_ahead = conn.recv(1024)
         if client_go_ahead :
             conn.send(bytes(str(line), 'utf-8'))
-            print("sent line:", line)
     
     
     print('File has been transferred successfully.')
@@ -85,7 +80,7 @@ def read_lines(path) :
     # Strips the newline character
     for line in lines:
         count += 1
-        print("Line{}: {}".format(count, line.strip()))
+        "Line{}: {}".format(count, line.strip())
         
     file.close()
         
@@ -110,9 +105,7 @@ def server(host, port, file_name):
         print_lock.acquire()
         print('Connected to :', addr[0], ':', addr[1])
 
-        # Start a new thread and return its identifier
-        start_new_thread(client_service, (conn, False, file_name))
-    server.close()
+        start_new_thread(client_service, (conn, file_name))
 
  
 if __name__ == "__main__":

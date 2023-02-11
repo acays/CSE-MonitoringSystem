@@ -47,7 +47,7 @@ def create_server_conn(host, port) :
     
     return server_conn
 
-def send_message(server_conn, message) :  # message you send to servers
+def send_message(server_conn, message) :  
     server_conn.send(message.encode('ascii'))
     
 def receive_processes(server) :
@@ -60,7 +60,6 @@ def receive_file(server, file_name) :
     file = open(file_name, 'w')
 
     num_lines = int(server.recv(1024))
-    # line = server.recv(1024)
     line = "default"
     send_message(server, "ready for next line") 
     
@@ -70,6 +69,7 @@ def receive_file(server, file_name) :
         line = process_line(line, i, num_lines)
         file.write(line + "\n")
 
+        # will mess up message timing on server side without this if
         if i < num_lines-1 :
             send_message(server, "ready for next line")        
 
@@ -82,8 +82,6 @@ def process_line(line, i, num_lines) :
         line = line[4:len(line)-2]
     else :
          line = line[4:len(line)-8]
-    print("line is:", line)
-    # line = str(line) + '\n'
     return line
                 
 

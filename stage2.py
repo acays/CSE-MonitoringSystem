@@ -30,8 +30,8 @@ while i < len(sys.argv) :
  
 def create_client(host, port, file_name) :
     command =  'start /wait python3 client.py ' + str(host) + " " + str(port) + " " + file_name + " " + "False"
-    subprocess.call(command, shell=True)   
+    subprocess.call(command, shell=True) 
 if __name__ == "__main__":
     new_client = Thread(target=create_client, args=(host_client, port_client, file_name))
     new_client.start()
-    server(host_server, port_server, None)
+    server(host_server, int(port_server), None)
