@@ -9,13 +9,14 @@ import subprocess
 from _thread import *
 import threading
 from process_list import *
-import os
 from pathlib import Path
+
+import sys
 
 print_lock = threading.Lock()
  
 
-def client_service(conn, isStage3):
+def client_service(conn, isStage3, file_name):
     while True:
  
         # data received from client
@@ -31,22 +32,28 @@ def client_service(conn, isStage3):
         if eval(isStage3) :
            
             send_directories(conn)
-            cur_dir = Path(Path.cwd())
-            file_dir = Path.joinpath(cur_dir, "test")
-            file_path = Path.joinpath(file_dir, "test.txt")
             
+            # checking to see if the full path is already given
+            if file_name[0:3] == "C:'\'" :
+                file_path = file_name
+            # otherwise assume path starts from current directory
+            else :      
+                cur_dir = Path(Path.cwd())
+                # file_dir = Path.joinpath(cur_dir, "test")
+                # file_path = Path.joinpath(cur_dir, "test.txt")
+                file_path = Path.joinpath(cur_dir, "\\" + file_name)
+                
             print("file being sent is:", file_path)
-            send_file(conn)
-            # send_file2(conn)
+            send_file(conn, file_name)
         else :
             send_processes(conn)
+       
             
     # connection closed
     conn.close()
     
 def send_directories(conn) :
     directories = str(subprocess.check_output("dir", shell=True))
-    print("dir is  ", directories)
     conn.sendall(bytes(str(sys.getsizeof(directories)), 'utf-8'))
     conn.sendall(bytes(str(directories), 'utf-8'))
     
@@ -56,14 +63,10 @@ def send_processes(conn) :
     conn.sendall(bytes(str(sys.getsizeof(processes)), 'utf-8'))
     conn.sendall(bytes(str(processes), 'utf-8'))
     
-def send_file(conn) :
-    # Read File in binary
-    
-    lines = read_lines('test/test.txt')
+def send_file(conn, file_name) :
+    lines = read_lines(file_name)
     conn.send(bytes(str(len(lines)), 'utf-8'))
-    
-    print("lines length is:", len(lines))
-      
+
     for line in lines:
         client_go_ahead = conn.recv(1024)
         if client_go_ahead :
@@ -88,13 +91,7 @@ def read_lines(path) :
         
     return lines
  
-def server():
-    host = ""
- 
-    # reserve a port on your computer
-    # in our case it is 12345 but it
-    # can be anything
-    port = 12345
+def server(host, port, file_name):
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((host, port))
     print("socket binded to port", port)
@@ -114,9 +111,9 @@ def server():
         print('Connected to :', addr[0], ':', addr[1])
 
         # Start a new thread and return its identifier
-        start_new_thread(client_service, (conn, False))
+        start_new_thread(client_service, (conn, False, file_name))
     server.close()
 
  
-
-server()
+if __name__ == "__main__":
+    server('127.0.0.1', 12345, "output.txt")

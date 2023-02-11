@@ -1,100 +1,80 @@
-# https://www.geeksforgeeks.org/socket-programming-multi-threading-python/
-
 
 import socket
 import time
+import sys
  
-def client(isStage3):
+def client(isStage3, host, port, file_name):
     
     try: 
-        
-        
-        # Define the port on which you want to connect
-        port = 12345
-        # local host IP '127.0.0.1'
-        host = '127.0.0.1'
-        
+    
+        # in stage 2
         while True and isStage3 == False:
-            time.sleep(2)
-            server = create_server(host, port)
-            send_message(server, str(isStage3))
+            time.sleep(60)
+            server_conn = create_server_conn(host, port)
+            send_message(server_conn, str(isStage3))
+            processes = receive_processes(server_conn)
             
-            print(receive_processes(server))
+            if file_name ==  "None" :
+                print(processes)
+            else :
+                process_file = open(file_name, "w")
+    
+                process_file.write(str(processes))
                 
         if isStage3 :
-            server = create_server(host, port)
-            send_message(server, str(isStage3))
+            server_conn = create_server_conn(host, port)
+            send_message(server_conn, str(isStage3))
             
-            print(receive_directories(server))
-            receive_file2(server)
+            print(receive_directories(server_conn))
+            receive_file(server_conn, file_name)
             
-            server.close()
+            server_conn.close()
             
         
     except KeyboardInterrupt:
-        server.close()
+        server_conn.close()
         pass
+    
 def receive_directories(server) :
     message_size = int(server.recv(1024))
     directories = server.recv(message_size)
     
     return directories
    
-def create_server(host, port) :
-    server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    # connect to server on local computer
-    server.connect((host,port))
+def create_server_conn(host, port) :
+    server_conn = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    server_conn.connect((host,port))
     
-    return server
+    return server_conn
 
-def send_message(server, message) :  # message you send to servers
-    server.send(message.encode('ascii'))
-
+def send_message(server_conn, message) :  # message you send to servers
+    server_conn.send(message.encode('ascii'))
+    
+def receive_processes(server) :
+    message_size = int(server.recv(1024))
+    processes = server.recv(message_size)
+    
+    return processes
         
-def receive_file(server) : 
-    # Write File in binary
-    file = open('client-file.txt', 'wb')
+def receive_file(server, file_name) : 
+    file = open(file_name, 'w')
 
     num_lines = int(server.recv(1024))
     # line = server.recv(1024)
     line = "default"
-    
-    print("")
-        
-    for i in range(num_lines)-1:
-        line = server.recv(1024)
-        print("1",line.decode())
-        line = line[2:len(line)-1]
-        print("2",line)
-        line = str(line) + '\n'
-        print("3",line)
-        line = bytes(line, 'utf-8')
-        print("4",line)
-        file.write(line[2:len(line)])
-        
-        
-def receive_file2(server) : 
-    # Write File in binary
-    file = open('client-file.txt', 'w')
-
-    num_lines = int(server.recv(1024))
-    # line = server.recv(1024)
-    line = "default"
-    print()
-    print("lines sent is", num_lines)
     send_message(server, "ready for next line") 
-    # https://stackoverflow.com/questions/33054527/typeerror-a-bytes-like-object-is-required-not-str-when-handling-file-conte
+    
     for i in range(num_lines):
         line = server.recv(1024)
          
         line = process_line(line, i, num_lines)
-        print()
         file.write(line + "\n")
 
         if i < num_lines-1 :
             send_message(server, "ready for next line")        
 
     print('File has been received successfully.')
+    
 def process_line(line, i, num_lines) :
     line = str(line)
     print("line is:", line)
@@ -106,10 +86,15 @@ def process_line(line, i, num_lines) :
     # line = str(line) + '\n'
     return line
                 
-def receive_processes(server) :
-    message_size = int(server.recv(1024))
-    processes = server.recv(message_size)
+
+
+if __name__ == "__main__":
+    # call from one of the stages or client is run directly with 5 args
+    if len(sys.argv) == 5:
+        client(eval(sys.argv[4]), sys.argv[1], int(sys.argv[2]), sys.argv[3])
+    # run the client normally  
+    else :
+        client(False, '127.0.0.1', 12345, "None")
     
-    return processes
- 
-client(True)
+    
+    
